@@ -1,0 +1,15 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+	Menu
+{% endblock %}
+
+{% block body %}
+	{% for pizza in pizzas %}
+		<div>
+			<h1>{{pizza.name}}</h1>
+			{{pizza.description}}
+			size : {{pizza.size}}
+		</div>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+	Home
+{% endblock %}
+
+{% block body %}
+	<form action="{% url 'register' %}" method="post">
+		{% csrf_token %}
+		<div>
+			<input type="text" name="username" 	placeholder="Username">	
+		</div>
+		<div>
+			<input type="text" name="fname" 	placeholder="First name">	
+		</div>
+		<div>
+			<input type="text" name="lname" 	placeholder="Last name">	
+		</div>
+		<div>
+			<input type="email" name="email" 	placeholder="Email id">	
+		</div>
+		<div>
+			<input type="password" name="password"	placeholder="Password">	
+		</div>
+		<div>
+			<input type="submit" name="submit">	
+		</div>
+	</form>
+{% endblock %}
