@@ -4,12 +4,57 @@
 	Menu
 {% endblock %}
 
+{% block css %}
+{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'orders/menu.css' %}">
+{% endblock %}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'orders/menu.js' %}"></script>
+{% endblock %}
+
 {% block body %}
-	{% for pizza in pizzas %}
+	<!-- Display pizza -->
+	<div class="products">
+		{% for pizza in pizzas %}
+			<div class="pizza" pizzaid="{{pizza.id}}">
+				<h1>{{pizza.name}}</h1>
+				<div class="pizzaDesc">
+					{{pizza.description}}
+				</div>
+				<div class="pizzaSize">
+					{{pizza.size}} size	
+				</div>
+				
+				<h2>Toppings</h2>
+				{% for topping in toppings %}
+					<div class="topping">
+						<input type="checkbox" name="{{topping.id}}" value="{{topping.id}}">
+						<div class="toppingName">{{topping.name}}</div>
+						<div class="toppingPrice">${{topping.price}}</div>	
+					</div>
+				{% endfor %}
+				<button class="addToCart">Add to cart</button>
+			</div>
+		{% endfor %}	
+	</div>
+	
+
+	<!-- Cart -->
+	<div id="cartBlock">
 		<div>
-			<h1>{{pizza.name}}</h1>
-			{{pizza.description}}
-			size : {{pizza.size}}
+			<h1>Cart</h1>	
 		</div>
-	{% endfor %}
+		
+		<div id="cart">
+			
+		</div>
+
+		<div>
+			<button id="buy">Buy</button>	
+		</div>
+	</div>
+
+	
 {% endblock %}

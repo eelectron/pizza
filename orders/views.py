@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-from .models import Pizza
+
+from .models import Pizza, Topping
 
 # Create your views here.
 def index(request):
@@ -41,9 +42,12 @@ def login_view(request):
 		return render(request, "orders/login.html", context)
 
 def menu(request):
-	pizzas = Pizza.objects.all()
+	pizzas 		= Pizza.objects.all()
+	toppings 	= Topping.objects.all()
 	context = {
-		"pizzas": pizzas
+		"pizzas": pizzas,
+		"basePrice": "",# ToDO
+		"toppings": toppings
 	}
 	return render(request, "orders/menu.html", context)
 
@@ -51,3 +55,7 @@ def menu(request):
 def logout_view(request):
 	logout(request)
 	return render(request, "orders/login.html", {"message": "Logged out"})
+
+def buy(request):
+	
+	return HttpResponse("Buy")

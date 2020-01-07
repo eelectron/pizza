@@ -1,0 +1,25 @@
+div{
+	border: 1px solid black;
+	margin: 5px;
+}
+
+div.pizza{
+	border: 1px solid aqua;
+	margin: 10px;
+}
+
+div.topping{
+	display: inline-block;
+}
+
+div.products{
+	width: 60%;
+	float: left;
+}
+
+div#cartBlock{
+	width: 30%;
+	height: 96vh;
+	overflow: auto;
+	float: left;
+}
