@@ -24,7 +24,10 @@
 					{{pizza.description}}
 				</div>
 				<div class="pizzaSize">
-					{{pizza.size}} size	
+					<span>{{pizza.size}}</span> size	
+				</div>
+				<div class="pizzaCost">
+					$<span>{{pizza.price}}</span>
 				</div>
 				
 				<h2>Toppings</h2>
@@ -32,7 +35,7 @@
 					<div class="topping">
 						<input type="checkbox" name="{{topping.id}}" value="{{topping.id}}">
 						<div class="toppingName">{{topping.name}}</div>
-						<div class="toppingPrice">${{topping.price}}</div>	
+						<div class="toppingCost">$<span>{{topping.price}}</span></div>	
 					</div>
 				{% endfor %}
 				<button class="addToCart">Add to cart</button>
@@ -52,9 +55,8 @@
 		</div>
 
 		<div>
+			$<span class="totalCost">0</span>
 			<button id="buy">Buy</button>	
 		</div>
 	</div>
-
-	
 {% endblock %}

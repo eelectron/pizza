@@ -16,6 +16,15 @@
 	{% endblock %}	
 </head>
 <body>
+	<nav>
+		<a href="/">Home</a> |
+		{% if user.is_authenticated %}
+		    <a href="{% url 'logout' %}">Welcome, {{ user.get_username }}! Logout</a>
+		{% else %}
+		    <a href="{% url 'login' %}">Welcome, new user. Please log in.</a>
+		{% endif %}
+
+	</nav>
 	{% block body %}
 	{% endblock %}
 </body>

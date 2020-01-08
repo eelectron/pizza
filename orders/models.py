@@ -36,11 +36,12 @@ class Pizza(Product):
     base    = models.ForeignKey(BasePizza, on_delete=models.CASCADE, default=None)
     size    = models.ForeignKey(PizzaSize, on_delete=models.CASCADE, blank=True, null=True)
     #topping = models.ManyToManyField(Topping, blank=True)
+    price   = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return f"{self.id} - {self.name} , {self.size} size , {self.description}"
+        return f"{self.id} - {self.name} , {self.size} size , {self.description}, ${self.price}"
 
-
+'''
 class PizzaCost(models.Model):
     pizza   = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     #size    = models.ForeignKey(PizzaSize, on_delete=models.SET_NULL, null=True)
@@ -48,7 +49,7 @@ class PizzaCost(models.Model):
 
     def __str__(self):
         return f"{self.pizza} of ${self.price}"
-
+'''
 
 class Order(models.Model):
     customer    = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer")

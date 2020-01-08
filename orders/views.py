@@ -44,6 +44,8 @@ def login_view(request):
 def menu(request):
 	pizzas 		= Pizza.objects.all()
 	toppings 	= Topping.objects.all()
+
+	# 
 	context = {
 		"pizzas": pizzas,
 		"basePrice": "",# ToDO
