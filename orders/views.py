@@ -3,8 +3,11 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+#from django.views.decorators.csrf import csrf_protect
 
-from .models import Pizza, Topping
+from .models import Pizza, Topping, Order, ToppingOrder, OrderDetail
+
+import json
 
 # Create your views here.
 def index(request):
@@ -44,11 +47,9 @@ def login_view(request):
 def menu(request):
 	pizzas 		= Pizza.objects.all()
 	toppings 	= Topping.objects.all()
-
-	# 
+ 
 	context = {
 		"pizzas": pizzas,
-		"basePrice": "",# ToDO
 		"toppings": toppings
 	}
 	return render(request, "orders/menu.html", context)
@@ -58,6 +59,41 @@ def logout_view(request):
 	logout(request)
 	return render(request, "orders/login.html", {"message": "Logged out"})
 
+
 def buy(request):
-	
-	return HttpResponse("Buy")
+	# insert order in database
+	if request.method == "POST":
+		products = json.loads(request.POST["products"])
+
+		# total cost
+		totalCost = int(request.POST["totalCost"])
+		'''
+		for product in products:
+			pizzaId = int(product["pizzaid"])
+			pizza 	= Pizza.objects.get(id=pizzaId)
+			totalCost += pizza.price
+			for toppingid in product["toppingids"]:
+				topping 	= Topping.objects.get(id=int(toppingid))
+				totalCost 	+= topping.price
+		'''
+		# insert order in Order table
+		user = User.objects.get(username=request.user)
+		order = Order(customer=user, cost=totalCost)
+		order.save()
+
+		for product in products:
+			pizzaId = int(product["pizzaid"])
+			pizza 	= Pizza.objects.get(id=pizzaId)
+			od = OrderDetail(orderId=order, product=pizza)
+			od.save()
+
+			for toppingid in product["toppingids"]:
+				topping = Topping.objects.get(id=int(toppingid))
+				to = ToppingOrder(orderDetailId=od, toppingName=topping)
+				to.save()
+		print("Order placed!")
+	return render(request, "orders/orderConfirmation.html", {"message": "Order placed, Thank You !"})
+
+
+def orderConfirmation(request):
+	pass

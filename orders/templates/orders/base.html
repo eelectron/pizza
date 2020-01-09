@@ -4,6 +4,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="/static/orders/favicon.png">
 	<title>
 		{% block title %}
 		{% endblock %}
@@ -19,11 +20,11 @@
 	<nav>
 		<a href="/">Home</a> |
 		{% if user.is_authenticated %}
+			<a href="{% url 'menu' %}">Menu</a> |
 		    <a href="{% url 'logout' %}">Welcome, {{ user.get_username }}! Logout</a>
 		{% else %}
 		    <a href="{% url 'login' %}">Welcome, new user. Please log in.</a>
 		{% endif %}
-
 	</nav>
 	{% block body %}
 	{% endblock %}
