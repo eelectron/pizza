@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 #from django.views.decorators.csrf import csrf_protect
 
-from .models import Pizza, Topping, Order, ToppingOrder, OrderDetail
+from .models import Pizza, Topping, Order, ToppingOrder, OrderDetail, CartItem, CartItemTopping, BasePizza
 
 import json
 
@@ -45,12 +45,36 @@ def login_view(request):
 		return render(request, "orders/login.html", context)
 
 def menu(request):
-	pizzas 		= Pizza.objects.all()
+	# display menu
+	basePizzas 	= BasePizza.objects.all()
 	toppings 	= Topping.objects.all()
- 
+
+	#get all corresponding pizza or every base pizza
+	pizzas = []
+	for bp in basePizzas:
+		pizza = {}
+		pizza["basePizza"] = bp
+		pizza["pizzas"] = bp.pizza_set.all() 
+		pizzas.append(pizza)
+
+	# display saved cart item
+	user 		= User.objects.get(username=request.user)
+	cartItems 	= CartItem.objects.filter(customer=user)
+	
+	# get all toppings
+	items = []
+	for item in cartItems:
+		product = {}
+		product["cartItem"] = item
+		print(item)
+		product["cartItemToppings"] = CartItemTopping.objects.filter(cartItem=item.id)
+		items.append(product)
+
 	context = {
-		"pizzas": pizzas,
-		"toppings": toppings
+		"basePizzas": basePizzas,
+		"pizzas" : pizzas,
+		"toppings": toppings,
+		"cartItems" : items
 	}
 	return render(request, "orders/menu.html", context)
 
@@ -61,39 +85,109 @@ def logout_view(request):
 
 
 def buy(request):
-	# insert order in database
-	if request.method == "POST":
-		products = json.loads(request.POST["products"])
+	# insert order in Order table
+	user 		= User.objects.get(username=request.user)
+	cartItems 	= CartItem.objects.filter(customer=user)
+	
+	# total cost of cart items
+	totalCost = 0
 
-		# total cost
-		totalCost = int(request.POST["totalCost"])
-		'''
-		for product in products:
-			pizzaId = int(product["pizzaid"])
-			pizza 	= Pizza.objects.get(id=pizzaId)
-			totalCost += pizza.price
-			for toppingid in product["toppingids"]:
-				topping 	= Topping.objects.get(id=int(toppingid))
-				totalCost 	+= topping.price
-		'''
-		# insert order in Order table
-		user = User.objects.get(username=request.user)
-		order = Order(customer=user, cost=totalCost)
-		order.save()
+	# get all product from cart
+	products = []
+	for item in cartItems:
+		product = {}
+		product["pizzaid"] = item.product.id
+		cartItemToppings = CartItemTopping.objects.filter(cartItem=item.id)
 
-		for product in products:
-			pizzaId = int(product["pizzaid"])
-			pizza 	= Pizza.objects.get(id=pizzaId)
-			od = OrderDetail(orderId=order, product=pizza)
-			od.save()
+		totalCost += item.product.price
+		product["toppings"] = []
+		for cit in cartItemToppings:
+			totalCost += cit.topping.price
+			product["toppings"].append(cit.topping)
+		products.append(product)
 
-			for toppingid in product["toppingids"]:
-				topping = Topping.objects.get(id=int(toppingid))
-				to = ToppingOrder(orderDetailId=od, toppingName=topping)
-				to.save()
-		print("Order placed!")
-	return render(request, "orders/orderConfirmation.html", {"message": "Order placed, Thank You !"})
+	order = Order(customer=user, cost=totalCost)
+	order.save()
+
+	# add to order
+	for product in products:
+		pizzaId = int(product["pizzaid"])
+		pizza 	= Pizza.objects.get(id=pizzaId)
+		od = OrderDetail(orderId=order, product=pizza)
+		od.save()
+
+		for topping in product["toppings"]:
+			to = ToppingOrder(orderDetailId=od, toppingName=topping)
+			to.save()
+
+	# delete cart items because customer has purchased it
+	cartItems.delete()
+	context = {
+		"message": "Order placed, Thank You !",
+		"orderNo": "Your order number is " + str(order.id)
+	}
+	return render(request, "orders/success.html", context)
 
 
+'''
+Display all items of cart for order confirmation .
+'''
 def orderConfirmation(request):
-	pass
+	if request.method == "POST":
+		user 		= User.objects.get(username=request.user)
+		cartItems 	= CartItem.objects.filter(customer=user)
+		
+		# total cost of cart items
+		totalCost = 0
+
+		# get all toppings
+		items = []
+		for item in cartItems:
+			product = {}
+			product["cartItem"] = item
+			cartItemToppings = CartItemTopping.objects.filter(cartItem=item.id)
+			product["cartItemToppings"] = cartItemToppings
+			items.append(product)
+
+			totalCost += item.product.price
+			for cit in cartItemToppings:
+				totalCost += cit.topping.price
+
+
+		context = {
+			"cartItems" : items,
+			"totalCost" : totalCost
+		}
+		return render(request, "orders/orderConfirmation.html",context)
+
+'''
+Save items of cart .
+input : id of pizza
+'''
+def saveCartItem(request):
+	if request.method == "POST":
+		product = json.loads(request.POST["product"])
+		id 		= int(product["id"])
+		pizza 	= Pizza.objects.get(id=id)
+		user 	= User.objects.get(username=request.user)
+
+		cartItem = CartItem(customer=user, product=pizza)
+		cartItem.save()
+
+		# save if any topping is associated with the pizza
+		if "toppingIds" in product:
+			for toppingId in product["toppingIds"]:
+				topping = Topping.objects.get(id=int(toppingId))
+				toppingItem = CartItemTopping(cartItem=cartItem, topping=topping)
+				toppingItem.save()
+	return HttpResponse(f"{cartItem.id}")
+
+
+def removeCartItem(request):
+	if request.method == "POST":
+		cartItem = json.loads(request.POST["cartItem"])
+		id 		= int(cartItem["id"])
+
+		cartItem = CartItem.objects.get(id=id)
+		cartItem.delete()
+	return HttpResponse(f"cartItemId {id} is removed")

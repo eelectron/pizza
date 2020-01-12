@@ -17,25 +17,31 @@
 {% block body %}
 	<!-- Display pizza -->
 	<div class="products">
-		{% for pizza in pizzas %}
-			<div class="pizza" data-pizzaid="{{pizza.id}}">
-				<h2>{{pizza.name}}</h2>
+		{% for bp in pizzas %}
+			<div class="basepizza" data-basepizzaid="{{bp.basePizza.id}}">
+				<h2>{{bp.basePizza.name}}</h2>
 				<div class="pizzaDesc">
-					{{pizza.description}}
+					{{bp.basePizza.description}}
 				</div>
-				<div class="pizzaSize">
-					<span>{{pizza.size}}</span> size	
-				</div>
+
+				<select name="pizza">
+					{% for pizza in bp.pizzas %}
+						<option value="{{pizza.id}}">{{pizza.size}}</option>
+					{% endfor %}	
+				</select>
+
 				<div class="pizzaCost">
-					$<span class="cost">{{pizza.price}}</span>
+					{% for pizza in bp.pizzas %}
+						<span class="pizza" data-id="{{pizza.id}}" data-cost="{{pizza.price}}">${{pizza.price}}</span>
+					{% endfor %}	
 				</div>
 				
 				<h3>Toppings</h3>
 				{% for topping in toppings %}
-					<div class="topping" data-toppingid="{{topping.id}}">
+					<div class="topping" data-id="{{topping.id}}" data-cost="{{topping.price}}">
 						<input type="checkbox">
 						<div class="toppingName">{{topping.name}}</div>
-						<div class="toppingCost">$<span class="cost">{{topping.price}}</span></div>	
+						<div class="toppingCost">${{topping.price}}</div>	
 					</div>
 				{% endfor %}
 				<button class="addToCart">Add to cart</button>
@@ -43,20 +49,47 @@
 		{% endfor %}	
 	</div>
 	
-
 	<!-- Cart -->
 	<div id="cartBlock">
 		<div>
 			<h2>Cart</h2>	
 		</div>
 		
-		<div id="cart"></div>
-
-		<div>
-			<div>
-				Total cost: $<span class="totalCost">0</span>
+		<form id="myform" action="/orderConfirmation/" method="post">
+			{% csrf_token %}
+			<!-- Display saved item -->
+			<div id="cart">
+				{% for item in cartItems %}
+					<div class="pizza" data-pizzaid="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
+						<h2>{{item.cartItem.product.name}}</h2>
+						<div class="pizzaDesc">
+							{{item.cartItem.product.description}}
+						</div>
+						<div class="pizzaSize">
+							<span>{{item.cartItem.product.size}}</span> size	
+						</div>
+						<div class="pizzaCost" data-cost="{{item.cartItem.product.price}}">
+							$<span  class="cost">{{item.cartItem.product.price}}</span>
+						</div>
+						
+						<h3>Toppings</h3>
+						{% for cartTopping in item.cartItemToppings %}
+							<div class="topping" data-cost="{{cartTopping.topping.price}}" data-id="{{cartTopping.topping.id}}">
+								<div class="toppingName">{{cartTopping.topping.name}}</div>
+								<div class="toppingCost">$<span class="cost">{{cartTopping.topping.price}}</span></div>	
+							</div>
+						{% endfor %}
+						<button class="removeFromCart">remove</button>
+					</div>
+				{% endfor %}
 			</div>
-			<button id="buy">Confirm</button>	
-		</div>
+				
+			<div>
+				<div>
+					<b>Total cost:</b> $<span class="totalCost">0</span>
+				</div>
+				<input type="submit" id="buy" value="Buy">
+			</div>
+		</form>	
 	</div>
 {% endblock %}
