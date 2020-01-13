@@ -1,0 +1,32 @@
+<div><h2>{{message}}</h2></div>
+<div><h3>{{orderNo}}</h3></div>
+
+<h2> Item list </h2>
+{% for item in cartItems %}
+	<div class="pizza" data-pizzaid="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
+		<h3>{{item.cartItem.product.name}}</h3>
+		<div class="pizzaDesc">
+			{{item.cartItem.product.description}}
+		</div>
+		<div class="pizzaSize">
+			<span>{{item.cartItem.product.size}}</span> size	
+		</div>
+		<div class="pizzaCost">
+			$<span class="cost">{{item.cartItem.product.price}}</span>
+		</div>
+		
+		<h5>Toppings</h5>
+		{% for cartTopping in item.cartItemToppings %}
+			<div class="topping" data-toppingid="{{cartTopping.topping.id}}">
+				<div class="toppingName">{{cartTopping.topping.name}}</div>
+				<div class="toppingCost">$<span class="cost">{{cartTopping.topping.price}}</span></div>	
+			</div>
+		{% endfor %}
+	</div>
+{% endfor %}
+
+<div>
+	<div>
+		<b>Total cost:</b> $<span class="totalCost">{{totalCost}}</span>
+	</div>
+</div>

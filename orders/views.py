@@ -3,6 +3,11 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from django.core import mail
+from django.template.loader import get_template, render_to_string
+from django.template import Context
+from django.utils.html import strip_tags
+
 #from django.views.decorators.csrf import csrf_protect
 
 from .models import Pizza, Topping, Order, ToppingOrder, OrderDetail, CartItem, CartItemTopping, BasePizza
@@ -94,10 +99,16 @@ def buy(request):
 
 	# get all product from cart
 	products = []
+	emailItems = []
 	for item in cartItems:
 		product = {}
 		product["pizzaid"] = item.product.id
 		cartItemToppings = CartItemTopping.objects.filter(cartItem=item.id)
+
+		emailItem = {}
+		emailItem["cartItem"] = item
+		emailItem["cartItemToppings"] = cartItemToppings
+		emailItems.append(emailItem)
 
 		totalCost += item.product.price
 		product["toppings"] = []
@@ -120,12 +131,17 @@ def buy(request):
 			to = ToppingOrder(orderDetailId=od, toppingName=topping)
 			to.save()
 
+	
+	context = {
+		"cartItems": emailItems,
+		"totalCost": totalCost
+	}
+
+	# send order num to email
+	sendEmail(request, order.id, context)
+
 	# delete cart items because customer has purchased it
 	cartItems.delete()
-	context = {
-		"message": "Order placed, Thank You !",
-		"orderNo": "Your order number is " + str(order.id)
-	}
 	return render(request, "orders/success.html", context)
 
 
@@ -191,3 +207,20 @@ def removeCartItem(request):
 		cartItem = CartItem.objects.get(id=id)
 		cartItem.delete()
 	return HttpResponse(f"cartItemId {id} is removed")
+
+def sendEmail(request, orderId, context):
+	subject = f"Pizza Order Number {orderId}"
+
+	context["message"] = "Order placed, Thank You !"
+	context["orderNo"] = "Your order number is " + str(orderId)
+	print(context)
+	
+	html_message = render_to_string("orders/emailTemplate.html", context)
+	message = strip_tags(html_message)
+	fm = "prashantexploring@gmail.com"
+	toEmailId = User.objects.get(username=request.user)
+	to = [toEmailId.email]
+	msg = mail.send_mail(subject, message, fm, ["vepisoy620@seomail.top"], html_message=html_message)
+	#msg.content_subtype = "html"
+	#msg.send()
+	#mail.send_mail(subject, message, fm, ["vepisoy620@seomail.top"], fail_silently=False)
