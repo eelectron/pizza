@@ -90,13 +90,13 @@ function addToCart(){
 		//div for size
 		let divNode = document.createElement("div");
 		divNode.setAttribute("class", "size");
-		divNode.innerHTML = item.dataset.size;
+		divNode.innerHTML = "size : " + item.dataset.size;
 		item.replaceChild(divNode, selectNode);
 
 		//div for cost
 		let divCost = document.createElement("div");
-		divNode.setAttribute("class", "cost");
-		divNode.innerHTML = "$" + item.dataset.cost;
+		divCost.setAttribute("class", "cost");
+		divCost.innerHTML = "$" + item.dataset.cost;
 		item.replaceChild(divCost, costNode);
 	}
 
@@ -180,7 +180,7 @@ This function is called for every product which is added to cart .
 function saveCartItem(item){
 	// get product id
 	product = {};
-	let id = item.dataset.id;
+	let id 	= item.dataset.id;
 
 	product["id"] = id;
 

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block css %}
-{% load static %}
+	{% load static %}
 	<link rel="stylesheet" type="text/css" href="{% static 'orders/menu.css' %}">
 {% endblock %}
 
@@ -43,7 +43,7 @@
 					</div>
 				{% else %}
 					<div class="size">
-						{{bp.basePizza.size}}
+						{{bp.basePizza.size}} size
 					</div>
 					<div class="cost">
 						${{bp.basePizza.price}}
@@ -117,7 +117,9 @@
 				<div>
 					<b>Total cost:</b> $<span class="totalCost">0</span>
 				</div>
-				<input type="submit" id="buy" value="Buy">
+				<div>
+					<input type="submit" id="buy" value="Buy">	
+				</div>
 			</div>
 		</form>	
 	</div>

@@ -4,11 +4,25 @@
 	Home
 {% endblock %}
 
+{% block css %}
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'orders/index.css' %}">
+{% endblock %}
+
+{% block script %}
+	{% load static %}
+	<script src="{% static 'orders/index.js' %}"></script>
+{% endblock %}
+
 {% block body %}
+	<h3>
+		New user registration
+	</h3>
 	<form action="{% url 'register' %}" method="post">
 		{% csrf_token %}
-		<div>
-			<input type="text" name="username" 	placeholder="Username">	
+		<div class="username">
+			<input type="text" name="username" 	placeholder="Username">
+			<span></span>	
 		</div>
 		<div>
 			<input type="text" name="fname" 	placeholder="First name">	
@@ -23,7 +37,9 @@
 			<input type="password" name="password"	placeholder="Password">	
 		</div>
 		<div>
-			<input type="submit" name="submit">	
+			<input type="submit" name="submit" value="Register">	
 		</div>
 	</form>
+	<div class="image">	
+	</div>
 {% endblock %}

@@ -1,0 +1,24 @@
+*{
+	box-sizing: border-box;
+}
+
+div.product{
+	border: 2px solid purple;
+	margin: 10px;
+	position: relative;
+}
+
+div.topping{
+	display: inline-block;
+}
+
+div.products{
+	width: 60%;
+	float: left;
+}
+
+.category{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}

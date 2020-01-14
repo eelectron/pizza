@@ -10,40 +10,17 @@ div.product{
 
 div.topping{
 	display: inline-block;
-	border: 1px solid green;
-	border-radius: 4px;
 }
 
 div.products{
 	width: 60%;
 	float: left;
-	border: 2px solid black;
-	margin: 5px;
-}
-
-div#cartBlock{
-	width: 35%;
-	height: 94vh;
-	overflow: auto;
-	float: left;
-	border: 2px solid black;
-	margin: 5px;
-}
-
-#buy{
-	width: 100%;
 }
 
 .category{
 	position: absolute;
 	top: 0px;
 	right: 0px;
-}
-
-input, select{
-	padding: 5px;
-	border-radius: 4px;
-	margin: 5px;
 }
 
 input[type="submit"], button{
@@ -55,13 +32,3 @@ input[type="submit"], button{
 input[type="submit"]:hover, button:hover{
 	background-color: green;
 }
-
-@media screen and (max-width: 600px){
-	div#cartBlock{
-		width: 100%;
-	}
-
-	div.products{
-		width: 100%;
-	}
-} 

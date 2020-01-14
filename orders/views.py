@@ -227,3 +227,12 @@ def sendEmail(request, orderId, context):
 	toEmailId = User.objects.get(username=request.user)
 	to = [toEmailId.email]
 	msg = mail.send_mail(subject, message, fm, to, html_message=html_message)
+
+
+def isUsernameAvailable(request):
+	if request.method == "POST":
+		try:
+			user = User.objects.get(username=request.POST["username"])
+		except User.DoesNotExist:
+			return HttpResponse("yes")
+		return HttpResponse("no")

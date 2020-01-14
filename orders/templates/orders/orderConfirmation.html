@@ -4,6 +4,11 @@
 	Order Confirmation
 {% endblock %}
 
+{% block css %}
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'orders/orderConfirmation.css' %}">
+{% endblock %}
+
 {% block script %}
 	{% load static %}
 	<script src="{% static 'orders/orderConfirmation.js' %}"></script>
@@ -36,10 +41,10 @@
 				<!--Display topping for pizza -->
 				{% ifequal item.cartItem.product.category.id 1 %}
 					<h3>Toppings</h3>
-					{% for cartTopping in item.cartItemToppings %}
-						<div class="product topping" data-id="{{cartTopping.product.id}}" data-cost="{{cartTopping.product.price}}">
-							<div class="name">{{cartTopping.product.name}}</div>
-							<div class="cost">${{cartTopping.product.price}}</div>	
+					{% for cartItem in item.cartItemToppings %}
+						<div class="product topping" data-id="{{cartItem.product.id}}" data-cost="{{cartItem.product.price}}">
+							<div class="name">{{cartItem.product.name}}</div>
+							<div class="cost">${{cartItem.product.price}}</div>	
 						</div>
 					{% endfor %}
 				{% endifequal%}

@@ -1,27 +1,30 @@
-<div><h2>{{message}}</h2></div>
-<div><h3>{{orderNo}}</h3></div>
+<h2>{{message}}</h2>
+<h3>{{orderNo}}</h3>
 
 <h2> Item list </h2>
 {% for item in cartItems %}
-	<div class="pizza" data-pizzaid="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
+	<div class="product pizza" data-id="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
 		<h3>{{item.cartItem.product.name}}</h3>
-		<div class="pizzaDesc">
+		<div class="description">
 			{{item.cartItem.product.description}}
 		</div>
-		<div class="pizzaSize">
+
+		<div class="size">
 			<span>{{item.cartItem.product.size}}</span> size	
 		</div>
-		<div class="pizzaCost">
-			$<span class="cost">{{item.cartItem.product.price}}</span>
+		<div class="cost">
+			${{item.cartItem.product.price}}
 		</div>
 		
-		<h5>Toppings</h5>
-		{% for cartTopping in item.cartItemToppings %}
-			<div class="topping" data-toppingid="{{cartTopping.product.id}}">
-				<div class="toppingName">{{cartTopping.product.name}}</div>
-				<div class="toppingCost">$<span class="cost">{{cartTopping.product.price}}</span></div>	
-			</div>
-		{% endfor %}
+		{% ifequal item.cartItem.product.category.id 1 %}
+			<h5>Toppings</h5>
+			{% for cartItem in item.cartItemToppings %}
+				<div class="topping" data-id="{{cartItem.product.id}}">
+					<div class="name">{{cartItem.product.name}}</div>
+					<div class="cost">$<span class="cost">{{cartItem.product.price}}</span></div>	
+				</div>
+			{% endfor %}
+		{% endifequal%}
 	</div>
 {% endfor %}
 

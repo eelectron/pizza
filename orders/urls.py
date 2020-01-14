@@ -11,4 +11,5 @@ urlpatterns = [
     path("orderConfirmation/", views.orderConfirmation, name="orderConfirmation"),
     path("saveCartItem/", views.saveCartItem, name="saveCartItem"),
     path("removeCartItem/", views.removeCartItem, name="removeCartItem"),
+    path("isUsernameAvailable/", views.isUsernameAvailable, name="isUsernameAvailable")
 ]
