@@ -17,9 +17,9 @@
 		
 		<h5>Toppings</h5>
 		{% for cartTopping in item.cartItemToppings %}
-			<div class="topping" data-toppingid="{{cartTopping.topping.id}}">
-				<div class="toppingName">{{cartTopping.topping.name}}</div>
-				<div class="toppingCost">$<span class="cost">{{cartTopping.topping.price}}</span></div>	
+			<div class="topping" data-toppingid="{{cartTopping.product.id}}">
+				<div class="toppingName">{{cartTopping.product.name}}</div>
+				<div class="toppingCost">$<span class="cost">{{cartTopping.product.price}}</span></div>	
 			</div>
 		{% endfor %}
 	</div>

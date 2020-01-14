@@ -2,14 +2,10 @@
 	box-sizing: border-box;
 }
 
-div{
-	border: 1px solid black;
-	margin: 5px;
-}
-
-div.basepizza{
-	border: 1px solid aqua;
+div.product{
+	border: 2px solid purple;
 	margin: 10px;
+	position: relative;
 }
 
 div.topping{
@@ -26,8 +22,15 @@ div#cartBlock{
 	height: 94vh;
 	overflow: auto;
 	float: left;
+	border: 2px solid black;
 }
 
 #buy{
 	width: 100%;
+}
+
+.category{
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }

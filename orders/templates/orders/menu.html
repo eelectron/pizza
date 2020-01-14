@@ -18,32 +18,51 @@
 	<!-- Display pizza -->
 	<div class="products">
 		{% for bp in pizzas %}
-			<div class="basepizza" data-basepizzaid="{{bp.basePizza.id}}">
+			<div class="product basepizza" data-id="{{bp.basePizza.id}}" data-cost="{{bp.basePizza.price}}" data-size="{{bp.basePizza.size}}">
 				<h2>{{bp.basePizza.name}}</h2>
-				<div class="pizzaDesc">
+				<h2 class="category">
+					{{bp.basePizza.category}}
+				</h2>
+
+				<div class="description">
 					{{bp.basePizza.description}}
 				</div>
-
-				<select name="pizza">
+				
+				
+				{% if bp.pizzas %}
+					<select name="size">
 					{% for pizza in bp.pizzas %}
 						<option value="{{pizza.id}}">{{pizza.size}}</option>
 					{% endfor %}	
-				</select>
+					</select>
 
-				<div class="pizzaCost">
-					{% for pizza in bp.pizzas %}
-						<span class="pizza" data-id="{{pizza.id}}" data-cost="{{pizza.price}}">${{pizza.price}}</span>
-					{% endfor %}	
-				</div>
-				
-				<h3>Toppings</h3>
-				{% for topping in toppings %}
-					<div class="topping" data-id="{{topping.id}}" data-cost="{{topping.price}}">
-						<input type="checkbox">
-						<div class="toppingName">{{topping.name}}</div>
-						<div class="toppingCost">${{topping.price}}</div>	
+					<div class="cost">
+						{% for pizza in bp.pizzas %}
+							<span class="pizza" data-id="{{pizza.id}}" data-cost="{{pizza.price}}" data-size="{{pizza.size}}">${{pizza.price}}</span>
+						{% endfor %}	
 					</div>
-				{% endfor %}
+				{% else %}
+					<div class="size">
+						{{bp.basePizza.size}}
+					</div>
+					<div class="cost">
+						${{bp.basePizza.price}}
+					</div>
+				{% endif %}
+				
+				
+				<!-- Display topping only for pizza -->
+				{% ifequal bp.basePizza.category.id 1 %}
+					<h3>Toppings</h3>
+					{% for topping in toppings %}
+						<div class="product topping" data-id="{{topping.id}}" data-cost="{{topping.price}}">
+							<input type="checkbox">
+							<div class="name">{{topping.name}}</div>
+							<div class="cost">${{topping.price}}</div>	
+						</div>
+					{% endfor %}
+				{% endifequal %}
+				
 				<button class="addToCart">Add to cart</button>
 			</div>
 		{% endfor %}	
@@ -60,25 +79,35 @@
 			<!-- Display saved item -->
 			<div id="cart">
 				{% for item in cartItems %}
-					<div class="pizza" data-pizzaid="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
+					<div class="product pizza" data-id="{{item.cartItem.product.id}}" data-size="{{item.cartItem.product.size}}" data-cost="{{item.cartItem.product.price}}" data-cartitemid="{{item.cartItem.id}}">
 						<h2>{{item.cartItem.product.name}}</h2>
-						<div class="pizzaDesc">
+						<h2 class="category">
+							{{item.cartItem.product.category}}
+						</h2>
+
+						<div class="description">
 							{{item.cartItem.product.description}}
 						</div>
-						<div class="pizzaSize">
-							<span>{{item.cartItem.product.size}}</span> size	
+
+						
+
+						<div class="size">
+							{{item.cartItem.product.size}} size	
 						</div>
-						<div class="pizzaCost" data-cost="{{item.cartItem.product.price}}">
-							$<span  class="cost">{{item.cartItem.product.price}}</span>
+						<div class="cost">
+							${{item.cartItem.product.price}}
 						</div>
 						
-						<h3>Toppings</h3>
-						{% for cartTopping in item.cartItemToppings %}
-							<div class="topping" data-cost="{{cartTopping.topping.price}}" data-id="{{cartTopping.topping.id}}">
-								<div class="toppingName">{{cartTopping.topping.name}}</div>
-								<div class="toppingCost">$<span class="cost">{{cartTopping.topping.price}}</span></div>	
-							</div>
-						{% endfor %}
+						{% ifequal item.cartItem.product.category.id 1 %}
+							<h3>Toppings</h3>
+							{% for cartTopping in item.cartItemToppings %}
+								<div class="product topping" data-cost="{{cartTopping.product.price}}" data-id="{{cartTopping.product.id}}">
+									<div class="name">{{cartTopping.product.name}}</div>
+									<div class="cost">${{cartTopping.product.price}}</div>	
+								</div>
+							{% endfor %}	
+						{% endifequal %}
+						
 						<button class="removeFromCart">remove</button>
 					</div>
 				{% endfor %}

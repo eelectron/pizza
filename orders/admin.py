@@ -1,15 +1,11 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import BasePizza, Pizza, Topping, Order, PizzaSize, OrderDetail, ToppingOrder, CartItem, CartItemTopping
+from .models import Product, Order, ProductSize, OrderDetail, CartItem, Category
 
-admin.site.register(Pizza)
-#admin.site.register(PizzaCost)
-admin.site.register(Topping)
 admin.site.register(Order)
-admin.site.register(PizzaSize)
+admin.site.register(ProductSize)
 admin.site.register(OrderDetail)
-admin.site.register(BasePizza)
-admin.site.register(ToppingOrder)
 admin.site.register(CartItem)
-admin.site.register(CartItemTopping)
+admin.site.register(Category)
+admin.site.register(Product)

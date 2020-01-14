@@ -16,27 +16,34 @@
 	<form action="/buy/" method="post">
 		{% csrf_token %}
 		{% for item in cartItems %}
-			<div class="pizza" data-pizzaid="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
+			<div class="product pizza" data-id="{{item.cartItem.product.id}}" data-cartitemid="{{item.cartItem.id}}">
 				<h2>{{item.cartItem.product.name}}</h2>
-				<div class="pizzaDesc">
+				<div class="description">
 					{{item.cartItem.product.description}}
 				</div>
-				<div class="pizzaSize">
+
+				<h2 class="category">
+					{{bp.basePizza.category}}
+				</h2>
+
+				<div class="size">
 					<span>{{item.cartItem.product.size}}</span> size	
 				</div>
-				<div class="pizzaCost">
+				<div class="cost">
 					$<span class="cost">{{item.cartItem.product.price}}</span>
 				</div>
 				
-				<h3>Toppings</h3>
-				{% for cartTopping in item.cartItemToppings %}
-					<div class="topping" data-toppingid="{{cartTopping.topping.id}}">
-						<!--<input type="checkbox">-->
-						<div class="toppingName">{{cartTopping.topping.name}}</div>
-						<div class="toppingCost">$<span class="cost">{{cartTopping.topping.price}}</span></div>	
-					</div>
-				{% endfor %}
-				<!-- <button class="removeFromCart">remove</button> -->
+				<!--Display topping for pizza -->
+				{% ifequal item.cartItem.product.category.id 1 %}
+					<h3>Toppings</h3>
+					{% for cartTopping in item.cartItemToppings %}
+						<div class="product topping" data-id="{{cartTopping.product.id}}" data-cost="{{cartTopping.product.price}}">
+							<div class="name">{{cartTopping.product.name}}</div>
+							<div class="cost">${{cartTopping.product.price}}</div>	
+						</div>
+					{% endfor %}
+				{% endifequal%}
+				
 			</div>
 		{% endfor %}
 			

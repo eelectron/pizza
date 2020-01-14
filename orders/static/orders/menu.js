@@ -9,16 +9,18 @@ document.addEventListener('DOMContentLoaded', function(){
 	});
 
 	//initially show only first pizza cost
-	document.querySelectorAll(".products .pizzaCost").forEach(function(pizzaCostNode){
+	document.querySelectorAll(".product > .cost").forEach(function(pizzaCostNode){
 		let spanNodes = pizzaCostNode.querySelectorAll("span");
 		for(let i = 0; i < spanNodes.length; i++){
 			spanNodes[i].style.display = "none";
 
 			// show only first price
 			if(i == 0){
-				console.log("span");
 				spanNodes[i].style.display = "block";
 				pizzaCostNode.setAttribute("data-cost", spanNodes[i].dataset.cost);
+				pizzaCostNode.parentElement.setAttribute("data-cost", spanNodes[i].dataset.cost);
+				pizzaCostNode.parentElement.setAttribute("data-id", spanNodes[i].dataset.id);
+				pizzaCostNode.parentElement.setAttribute("data-size", spanNodes[i].dataset.size);
 			}
 		}
 	});
@@ -47,12 +49,14 @@ document.addEventListener('DOMContentLoaded', function(){
 function showCost(){
 	const product = this.parentElement;
 	const selectNode = product.querySelector("select");
-	const pizzaCostNode = product.querySelector(".pizzaCost");
+	const pizzaCostNode = product.querySelector(".cost");
 
-	product.querySelectorAll(".pizzaCost span").forEach(function(spanNode){
+	product.querySelectorAll(".cost > span").forEach(function(spanNode){
 		if(spanNode.dataset.id == selectNode.value){
 			spanNode.style.display = "block";
-			pizzaCostNode.setAttribute("data-cost", spanNode.dataset.cost);
+			product.setAttribute("data-cost", spanNode.dataset.cost);
+			product.setAttribute("data-id", spanNode.dataset.id);
+			product.setAttribute("data-size", spanNode.dataset.size);
 		}
 		else{
 			spanNode.style.display = "none";
@@ -64,7 +68,7 @@ function showCost(){
 function addToCart(){
 	let cart = document.querySelector("#cart");
 
-	let pizzaId = this.parentElement.querySelector("select").value;
+	let id = this.parentElement.dataset.id;
 	let item 	= this.parentElement.cloneNode(true);
 
 	//remove unselected topping
@@ -77,29 +81,32 @@ function addToCart(){
 		topping.querySelector("input").remove();
 	});
 
-	//selected size of pizza
+	//remove drop down for size
 	let selectNode 	= item.querySelector("select");
-	
+	if(selectNode != null){
 
-	let s = "option[value='" + pizzaId + "']";
-	console.log(s);
-	let selectedPizzaNode = item.querySelector(s);
+		costNode = item.querySelector(".product > .cost");
 
-	//replace select with new div
-	let divNode = document.createElement("div");
-	divNode.setAttribute("data-id", pizzaId);
-	
-	console.log("len = " + selectedPizzaNode.childNodes.length);
-	selectedPizzaNode.childNodes.forEach(function(node){
-		divNode.append(node.cloneNode(true));
-	});
-	item.replaceChild(divNode, selectNode);
+		//div for size
+		let divNode = document.createElement("div");
+		divNode.setAttribute("class", "size");
+		divNode.innerHTML = item.dataset.size;
+		item.replaceChild(divNode, selectNode);
+
+		//div for cost
+		let divCost = document.createElement("div");
+		divNode.setAttribute("class", "cost");
+		divNode.innerHTML = "$" + item.dataset.cost;
+		item.replaceChild(divCost, costNode);
+	}
+
+	//add to cart
+	cart.append(item);
 
 	//save cart item in database
 	saveCartItem(item);
 
-	// add to cart
-	cart.append(item);
+	
 
 	// change add to cart button to deleteFromCart
 	let deleteFromCart = item.querySelector(".addToCart");
@@ -113,67 +120,18 @@ function addToCart(){
 
 	//find item cost
 	let cost = 0;
-	item.querySelectorAll(".pizza").forEach(function(pizzaNode){
-		if(pizzaNode.dataset.id == pizzaId){
-			cost += parseFloat(pizzaNode.dataset.cost);
-		}
-	});
+	cost += parseFloat(item.dataset.cost);
 
 	item.querySelectorAll(".topping").forEach(function(costTag){
 		cost += parseFloat(costTag.dataset.cost);
 	});
 
 	totalCost = totalCost + cost;
-
+	totalCost = totalCost.toFixed(2);
 	//display total cost
 	document.querySelector(".totalCost").innerHTML = totalCost;
 }
 
-
-// buy everything in cart after order is confirm
-function buy(){
-	products = [];
-	let cart = document.querySelector("#cart");
-	if(cart.hasChildNodes() == false){
-		return;
-	}
-
-	// redirect to order confirmation page
-	window.location.href = location.origin + "/orderConfirmation/";
-
-	cart.querySelectorAll(".pizza").forEach(function(pizza){
-		pizzaWithTopping = {};
-		pizzaWithTopping["pizzaid"] = pizza.dataset.pizzaid;
-
-		// get toppings
-		toppingIds = [];
-		pizza.querySelectorAll(".topping").forEach(function(topping){
-			toppingIds.push(topping.dataset.toppingid);
-		});
-
-		pizzaWithTopping["toppingids"] = toppingIds;
-
-		//add to products
-		products.push(pizzaWithTopping);
-	});
-
-	// send to server
-	const request = new XMLHttpRequest();
-	request.open("POST", '/buy/');
-	request.onload = function(){
-		// redirect to buy detail page
-		//location.replace(location.origin + "/orderConfirmation/");
-	}
-
-	const data = new FormData();
-	jsonProducts = JSON.stringify(products);
-	data.append('products',jsonProducts);
-	data.append('totalCost', document.querySelector(".totalCost").innerHTML)
-
-	// prevent cross site request forgery in ajax call
-	request.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-	request.send(data);
-}
 
 
 // Get csrftoken value from cookie
@@ -198,45 +156,41 @@ function removeFromCart(){
 	let totalCost = document.querySelector(".totalCost");
 	let productTag = this.parentElement;
 
-	let pizzaCost = productTag.querySelector(".pizzaCost");
-	cost += parseFloat(pizzaCost.dataset.cost);
+	cost += parseFloat(productTag.dataset.cost);
 
 	productTag.querySelectorAll(".topping").forEach(function(toppingNode){
 		cost += parseFloat(toppingNode.dataset.cost);
 	});
 
-	console.log("cost = " + cost);
-	totalCost.innerHTML = parseFloat(totalCost.innerHTML) - cost;
+
+
+	totalCost.innerHTML = (parseFloat(totalCost.innerHTML) - cost).toFixed(2);
 
 	//remove this product from database also
-	removeFromCartDatabase(this.parentElement);
+	removeFromCartDatabase(productTag);
 
 	//remove this item
-	this.parentElement.remove();
+	productTag.remove();
 }
 
-// save cart item
+/* save cart item
 // input : div tag
+This function is called for every product which is added to cart .
+*/
 function saveCartItem(item){
 	// get product id
 	product = {};
-	let id = 0, cost = 0;
-	item.querySelectorAll(".pizzaCost span").forEach(function(pizzaNode){
-		if(pizzaNode.style.display == "block"){
-			id = pizzaNode.dataset.id;
-			cost = pizzaNode.dataset.cost;
-		}
-	});
+	let id = item.dataset.id;
 
 	product["id"] = id;
 
 	// add toppings id if product is pizza
-	toppingIds = [];
-	item.querySelectorAll(".topping").forEach(function(topping){
-		toppingIds.push(topping.dataset.id);
+	subProductIds = [];
+	item.querySelectorAll(".topping").forEach(function(subProduct){
+		subProductIds.push(subProduct.dataset.id);
 	});
 
-	product["toppingIds"] = toppingIds;
+	product["toppingIds"] = subProductIds;
 	
 	// save this item to database
 	const request = new XMLHttpRequest();
@@ -280,8 +234,10 @@ function getTotalCostOfSavedItem(){
 	let totalCostNode = document.querySelector(".totalCost");
 	let totalCost = 0;
 
-	cart.querySelectorAll(".cost").forEach(function(costTag){
-		totalCost += parseFloat(costTag.innerHTML);
+	cart.querySelectorAll("[data-cost]").forEach(function(costTag){
+		totalCost += parseFloat(costTag.dataset.cost);
 	});
+
+	totalCost = totalCost.toFixed(2);	// 12.79898 ---> 12.80
 	totalCostNode.innerHTML = totalCost;
 }
