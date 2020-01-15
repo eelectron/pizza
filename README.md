@@ -48,4 +48,6 @@ Once the items are purchased , the cart will be cleared . If not purchased , the
 - Once the order is confirmed , a email is sent to user showing their purchased item and total cost .
 - The message is formated in html .
 
-https://youtu.be/JY6TB9d3TWU
+App screencast : https://youtu.be/JY6TB9d3TWU
+
+Try it : https://pizzacs50w.herokuapp.com
