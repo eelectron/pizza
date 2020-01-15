@@ -44,6 +44,6 @@ Once the items are purchased , the cart will be cleared . If not purchased , the
 
 ## Personal Touch
 - I chose to implement the functionality of sending email to user .
-- I included the setting for gmail in settings.py file .
+- I included the setting for gmail in settings.py file . Values are stored in environment variables 
 - Once the order is confirmed , a email is sent to user showing their purchased item and total cost .
 - The message is formated in html .
