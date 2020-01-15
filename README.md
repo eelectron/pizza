@@ -34,7 +34,7 @@ Once the items are purchased , the cart will be cleared . If not purchased , the
       - menu.html 			- all the items of restaurant are shown and cart is displayed 
       - orderConfirmation.html  - items will shown before buying it 
       - success.html 			- displays the order number  
-  - models.py 				- contains total 6 models . The main models is Product . It contains a field name "parentProduct" , which is used handle the case when a product is available in multiple sizes 
+  - models.py 				- contains total 6 models . The main model is Product . It contains a field name "parentProduct" , which is used to handle the case when a product is available in multiple sizes say small pizza, medium pizza, large pizza . And "ProductSize" and "Category" are also separate tables . Modelling in this way allows it to add more sizes or pizza category in future if required .
 
   - views.py 					- contains the code for user registration, login, logout, sending menu item, rendering order confirmation, buying , saving or removing cart item from database, sending email to user, checks username availability 
  - pizza
