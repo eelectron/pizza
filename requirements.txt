@@ -1,2 +1,6 @@
-Django==3.0.2
-gunicorn
+Django
+django-heroku  
+gunicorn                                          
+psycopg2                                           
+pytz                                                  
+whitenoise

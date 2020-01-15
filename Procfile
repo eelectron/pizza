@@ -1,1 +1,1 @@
-web: python manage.py runserver 0:80
+web: gunicorn pizza.wsgi --log-file -
