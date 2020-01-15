@@ -47,3 +47,5 @@ Once the items are purchased , the cart will be cleared . If not purchased , the
 - I included the setting for gmail in settings.py file . Values are stored in environment variables 
 - Once the order is confirmed , a email is sent to user showing their purchased item and total cost .
 - The message is formated in html .
+
+https://youtu.be/JY6TB9d3TWU
