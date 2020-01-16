@@ -11,6 +11,7 @@ After login , the user can view all the items provided by the restaurant . The u
 Once the items are purchased , the cart will be cleared . If not purchased , then cart item will remain in cart even after logout or browser is closed or viewed from other machine .
 
 App screencast : https://youtu.be/JY6TB9d3TWU
+
 Try it : https://pizzacs50w.herokuapp.com
 
 ## Files of project :
