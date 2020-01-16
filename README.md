@@ -14,6 +14,8 @@ App screencast : https://youtu.be/JY6TB9d3TWU
 
 Try it : https://pizzacs50w.herokuapp.com
 
+<img src="pizza0.png">
+
 ## Files of project :
 - project3
   - orders
