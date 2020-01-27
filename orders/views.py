@@ -1,12 +1,13 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core import mail
 from django.template.loader import get_template, render_to_string
 from django.template import Context
 from django.utils.html import strip_tags
+
 
 #from django.views.decorators.csrf import csrf_protect
 
@@ -236,3 +237,27 @@ def isUsernameAvailable(request):
 		except User.DoesNotExist:
 			return HttpResponse("yes")
 		return HttpResponse("no")
+
+
+
+# rest framework
+from rest_framework import serializers, viewsets
+from orders.serializers import ProductSerializer, CategorySerializer
+from rest_framework import viewsets
+from django.core import serializers
+
+'''
+@api_view(['GET'])
+def getProducts(self, request):
+		pList = Product.objects.all()
+		serializer = ProductSerializer(pList, many=True)
+		return Response(serializer.data)
+'''
+class ProductView(viewsets.ModelViewSet):
+	queryset = Product.objects.all()
+	serializer_class = ProductSerializer
+
+
+class CategoryView(viewsets.ModelViewSet):
+	queryset = Category.objects.all()
+	serializer_class = CategorySerializer

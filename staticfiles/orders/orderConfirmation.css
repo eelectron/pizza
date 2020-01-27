@@ -1,0 +1,34 @@
+*{
+	box-sizing: border-box;
+}
+
+div.product{
+	border: 2px solid aqua;
+	margin: 10px;
+	position: relative;
+}
+
+div.topping{
+	display: inline-block;
+}
+
+div.products{
+	width: 60%;
+	float: left;
+}
+
+.category{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+input[type="submit"], button{
+	background-color: aqua;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+input[type="submit"]:hover, button:hover{
+	background-color: green;
+}
