@@ -1,7 +1,8 @@
-# Project 3
 
-HarvardX : Web Programming with Python and JavaScript
+# HarvardX: CS50W
+[CS50's Web Programming with Python and JavaScript](https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/)
 
+## Project 3
 Hi, this is a web application for handling a pizza restaurant’s online orders. Users will be able to browse the restaurant’s menu, add items to their cart, and submit their orders. Meanwhile, the restaurant owners will be able to add and update menu items, and view orders that have been placed.
 
 
